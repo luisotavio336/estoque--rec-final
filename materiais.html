@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Materiais | Estoque em Dia</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estoque.css') }}">
+</head>
+<body>
+  <header>
+    <div class="container">Estoque em Dia</div>
+  </header>
+  <main class="container">
+    <section class="intro">
+      <p class="eyebrow">CONTROLE DE ESTOQUE</p>
+      <h1>Materiais da clínica</h1>
+      <p>Cadastre e organize os materiais utilizados pela clínica.</p>
+    </section>
+
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensagem in mensagens %}
+        <p class="mensagem {{ categoria }}" role="status">{{ mensagem }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    <section class="painel" aria-labelledby="titulo-cadastro">
+      <h2 id="titulo-cadastro">Adicionar material</h2>
+      <form class="form-cadastro" action="{{ url_for('adicionar_material') }}" method="post">
+        <label>
+          Nome do material
+          <input name="nome" type="text" maxlength="120" placeholder="Ex.: Luvas descartáveis" required>
+        </label>
+        <label>
+          Unidade
+          <input name="unidade" type="text" maxlength="40" placeholder="Ex.: Caixa" required>
+        </label>
+        <button type="submit">Cadastrar material</button>
+      </form>
+    </section>
+
+    <section class="lista" aria-labelledby="titulo-lista">
+      <div class="lista-cabecalho">
+        <div>
+          <h2 id="titulo-lista">Materiais cadastrados</h2>
+          <p>{{ itens|length }} material(is)</p>
+        </div>
+        <form class="form-busca" action="{{ url_for('materiais') }}" method="get">
+          <label class="sr-only" for="busca">Buscar material</label>
+          <input id="busca" name="busca" type="search" value="{{ busca }}" placeholder="Buscar material">
+          <button type="submit">Buscar</button>
+          {% if busca %}
+            <a href="{{ url_for('materiais') }}">Limpar</a>
+          {% endif %}
+        </form>
+      </div>
+
+      {% if itens %}
+        <ul class="materiais">
+          {% for item in itens %}
+            <li>
+              <form class="form-edicao" action="{{ url_for('editar_material', material_id=item.id) }}" method="post">
+                <label>
+                  <span class="sr-only">Nome do material</span>
+                  <input name="nome" type="text" value="{{ item.nome }}" maxlength="120" required>
+                </label>
+                <label>
+                  <span class="sr-only">Unidade do material</span>
+                  <input name="unidade" type="text" value="{{ item.unidade }}" maxlength="40" required>
+                </label>
+                <button class="botao-secundario" type="submit">Salvar</button>
+              </form>
+              <form action="{{ url_for('excluir_material', material_id=item.id) }}" method="post">
+                <button class="botao-perigo" type="submit">Excluir</button>
+              </form>
+            </li>
+          {% endfor %}
+        </ul>
+      {% elif busca %}
+        <p class="vazio">Nenhum material encontrado para “{{ busca }}”.</p>
+      {% else %}
+        <p class="vazio">Nenhum material cadastrado. Use o formulário acima para adicionar o primeiro.</p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>

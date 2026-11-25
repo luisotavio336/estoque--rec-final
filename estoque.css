@@ -1,0 +1,109 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, sans-serif;
+  color: #25322b;
+  background: #f5f5f0;
+}
+body { margin: 0; }
+header {
+  padding: 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+  background: #233d31;
+}
+.container {
+  width: min(54rem, calc(100% - 2rem));
+  margin-inline: auto;
+}
+main { padding-block: 2.5rem 4rem; }
+.intro { margin-bottom: 2rem; }
+.eyebrow {
+  margin-bottom: .5rem;
+  color: #52705d;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+h1, h2 { margin-top: 0; }
+h1 { margin-bottom: .5rem; font-family: Georgia, serif; font-size: clamp(2rem, 5vw, 3rem); }
+.intro > p:last-child, .lista-cabecalho p { color: #647168; }
+.painel, .materiais li, .vazio, .mensagem {
+  background: #fff;
+  border: 1px solid #d9ded3;
+  border-radius: .75rem;
+  padding: 1rem;
+}
+.painel { padding: 1.5rem; }
+h2 { font-size: 1.2rem; }
+.form-cadastro, .form-edicao, .form-busca {
+  display: flex;
+  align-items: end;
+  gap: .75rem;
+}
+.form-cadastro label, .form-edicao label { flex: 1; }
+label { display: grid; gap: .4rem; font-size: .875rem; font-weight: 650; }
+input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: .7rem .75rem;
+  border: 1px solid #cbd3ca;
+  border-radius: .45rem;
+  color: inherit;
+  font: inherit;
+}
+input:focus { outline: 3px solid #b7d2bd; border-color: #52705d; }
+button, .form-busca a {
+  display: inline-flex;
+  min-height: 2.65rem;
+  align-items: center;
+  justify-content: center;
+  padding: .55rem .9rem;
+  border: 0;
+  border-radius: .45rem;
+  background: #28523b;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+button:hover { background: #1d3e2d; }
+.lista { margin-top: 2.5rem; }
+.lista-cabecalho { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
+.lista-cabecalho h2, .lista-cabecalho p { margin-bottom: .35rem; }
+.form-busca { align-items: center; }
+.form-busca input { width: min(15rem, 45vw); }
+.form-busca a { background: transparent; color: #28523b; }
+.materiais { display: grid; gap: .75rem; list-style: none; margin: 1rem 0 0; padding: 0; }
+.materiais li { display: flex; align-items: center; gap: .65rem; }
+.form-edicao { flex: 1; }
+.botao-secundario { background: #e8eee8; color: #28523b; }
+.botao-secundario:hover { background: #dce7dc; }
+.botao-perigo { background: #f8e9e6; color: #8d3429; }
+.botao-perigo:hover { background: #f1d8d3; }
+.vazio { margin-top: 1rem; color: #647168; }
+.mensagem { margin: 0 0 1rem; }
+.mensagem.sucesso { border-color: #b7d2bd; background: #edf6ef; }
+.mensagem.erro { border-color: #e6b8ae; background: #fff2ef; color: #8d3429; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+@media (max-width: 620px) {
+  main { padding-block: 1.5rem 3rem; }
+  .form-cadastro { align-items: stretch; flex-direction: column; }
+  .form-cadastro button { width: 100%; }
+  .lista-cabecalho { align-items: stretch; flex-direction: column; }
+  .form-busca { align-items: center; }
+  .form-busca input { flex: 1; width: auto; }
+  .materiais li { align-items: stretch; flex-direction: column; }
+  .form-edicao { align-items: stretch; flex-direction: column; }
+  .form-edicao button, .materiais li > form:last-child button { width: 100%; }
+}
