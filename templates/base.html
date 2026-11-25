@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}{% endblock %} | Estoque em Dia</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estoque.css') }}">
+</head>
+<body>
+  <header>
+    <div class="container cabecalho">
+      <strong>Estoque em Dia</strong>
+      <nav aria-label="Navegação principal">
+        <a href="{{ url_for('materiais') }}" {% if request.endpoint == 'materiais' %}aria-current="page"{% endif %}>Materiais</a>
+        <a href="{{ url_for('movimentos.lista') }}" {% if request.endpoint == 'movimentos.lista' %}aria-current="page"{% endif %}>Movimentações</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    {% for categoria, mensagem in get_flashed_messages(with_categories=true) %}
+      <p class="mensagem {{ categoria }}" role="{{ 'alert' if categoria == 'erro' else 'status' }}">{{ mensagem }}</p>
+    {% endfor %}
+    {% block conteudo %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block titulo %}Movimentações{% endblock %}
+{% macro campos(item_id=none, tipo='entrada', quantidade='') %}
+  <label>Material
+    <select name="material_id" required>
+      <option value="">Selecione um material</option>
+      {% for item in itens %}
+        <option value="{{ item.id }}" {% if item.id == item_id %}selected{% endif %}>{{ item.nome }} ({{ item.unidade }})</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Tipo
+    <select name="tipo" required>
+      {% for valor, rotulo in tipos.items() %}
+        <option value="{{ valor }}" {% if valor == tipo %}selected{% endif %}>{{ rotulo }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Quantidade
+    <input name="quantidade" type="number" min="1" max="1000000" value="{{ quantidade }}" required>
+  </label>
+{% endmacro %}
+{% block conteudo %}
+  <section class="intro">
+    <h1>Movimentações</h1>
+    <p>Registre entradas e saídas de materiais da clínica.</p>
+  </section>
+  <section class="painel" aria-labelledby="nova">
+    <h2 id="nova">Nova movimentação</h2>
+    {% if itens %}
+      <form class="form-movimento" method="post" action="{{ url_for('movimentos.salvar') }}">
+        {{ campos() }}
+        <button type="submit">Registrar</button>
+      </form>
+    {% else %}
+      <p>Cadastre um item na <a href="{{ url_for('materiais') }}">página de materiais</a> para começar.</p>
+    {% endif %}
+  </section>
+  <section class="lista" aria-labelledby="historico">
+    <h2 id="historico">Histórico</h2>
+    <form class="form-busca" method="get" action="{{ url_for('movimentos.lista') }}">
+      <label>Filtrar por material
+        <select name="material">
+          <option value="">Todos</option>
+          {% for item in itens %}
+            <option value="{{ item.id }}" {% if item.id|string == material %}selected{% endif %}>{{ item.nome }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button type="submit">Filtrar</button>
+    </form>
+    {% if movimentos %}
+      <ul class="materiais historico">
+        {% for movimento in movimentos %}
+          <li>
+            <div>
+              <strong>{{ movimento.nome }} · {{ tipos[movimento.tipo] }}</strong>
+              <p>{{ movimento.quantidade }} {{ movimento.unidade }} · {{ movimento.criado_em }} UTC</p>
+              <details>
+                <summary>Editar movimentação</summary>
+                <form class="form-movimento" method="post" action="{{ url_for('movimentos.salvar', id=movimento.id) }}">
+                  {{ campos(movimento.material_id, movimento.tipo, movimento.quantidade) }}
+                  <button type="submit">Salvar</button>
+                </form>
+              </details>
+            </div>
+            <form method="post" action="{{ url_for('movimentos.salvar', id=movimento.id, excluir=True) }}">
+              <button class="botao-perigo" type="submit">Excluir</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="vazio">Nenhuma movimentação encontrada.</p>
+    {% endif %}
+  </section>
+{% endblock %}

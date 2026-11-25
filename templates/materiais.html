@@ -1,27 +1,11 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Materiais | Estoque em Dia</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='estoque.css') }}">
-</head>
-<body>
-  <header>
-    <div class="container">Estoque em Dia</div>
-  </header>
-  <main class="container">
+{% extends "base.html" %}
+{% block titulo %}Materiais{% endblock %}
+{% block conteudo %}
     <section class="intro">
       <p class="eyebrow">CONTROLE DE ESTOQUE</p>
       <h1>Materiais da clínica</h1>
       <p>Cadastre e organize os materiais utilizados pela clínica.</p>
     </section>
-
-    {% with mensagens = get_flashed_messages(with_categories=true) %}
-      {% for categoria, mensagem in mensagens %}
-        <p class="mensagem {{ categoria }}" role="status">{{ mensagem }}</p>
-      {% endfor %}
-    {% endwith %}
 
     <section class="painel" aria-labelledby="titulo-cadastro">
       <h2 id="titulo-cadastro">Adicionar material</h2>
@@ -82,6 +66,4 @@
         <p class="vazio">Nenhum material cadastrado. Use o formulário acima para adicionar o primeiro.</p>
       {% endif %}
     </section>
-  </main>
-</body>
-</html>
+{% endblock %}

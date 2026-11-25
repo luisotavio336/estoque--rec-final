@@ -3,7 +3,9 @@ import secrets
 import sqlite3
 from pathlib import Path
 
-from flask import Flask, flash, g, jsonify, redirect, render_template, request, url_for
+from flask import Flask, flash, g, redirect, render_template, request, url_for
+
+from movimentacoes import registrar_rotas
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
@@ -120,4 +122,5 @@ def excluir_material(material_id):
     return redirect(url_for('materiais'))
 
 
+registrar_rotas(app, conectar, listar_materiais)
 preparar_banco()

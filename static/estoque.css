@@ -107,3 +107,19 @@ button:hover { background: #1d3e2d; }
   .form-edicao { align-items: stretch; flex-direction: column; }
   .form-edicao button, .materiais li > form:last-child button { width: 100%; }
 }
+
+.cabecalho, .cabecalho nav { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+.cabecalho { justify-content: space-between; }
+.cabecalho a { color: white; padding: .3rem; }
+.cabecalho a[aria-current] { font-weight: 750; text-underline-offset: .25rem; }
+.form-movimento { display: grid; grid-template-columns: 2fr 1fr 1fr auto; align-items: end; gap: .75rem; }
+select { width: 100%; box-sizing: border-box; color: inherit; font: inherit; padding: .56rem; border: 1px solid #a2afa5; border-radius: .45rem; background: white; }
+.saldo { margin: 0; }
+.historico { padding-top: .75rem; }
+.historico li { align-items: start; }
+.historico li > div { min-width: 0; }
+.historico summary { cursor: pointer; margin-bottom: .65rem; }
+@media (max-width: 42rem) {
+  .form-movimento { grid-template-columns: 1fr; }
+  .historico li { align-items: stretch; }
+}
