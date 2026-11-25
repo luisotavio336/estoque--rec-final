@@ -3,7 +3,7 @@ import secrets
 import sqlite3
 from pathlib import Path
 
-from flask import Flask, flash, g, redirect, render_template, request, url_for
+from flask import Flask, flash, g, jsonify, redirect, render_template, request, url_for
 
 from movimentacoes import registrar_rotas
 
@@ -120,6 +120,11 @@ def excluir_material(material_id):
     else:
         flash('Material excluído.', 'sucesso')
     return redirect(url_for('materiais'))
+
+
+@app.get('/api/materiais')
+def api_materiais():
+    return jsonify([dict(item) for item in listar_materiais()])
 
 
 registrar_rotas(app, conectar, listar_materiais)
