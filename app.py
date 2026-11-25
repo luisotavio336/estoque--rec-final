@@ -3,12 +3,12 @@ import secrets
 import sqlite3
 from pathlib import Path
 
-from flask import Flask, flash, g, redirect, render_template, request, url_for
+from flask import Flask, flash, g, jsonify, redirect, render_template, request, url_for
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 PASTA = Path(__file__).resolve().parent
-app.config['DATABASE'] = PASTA / 'instance' / 'estoque.sqlite3'
+app.config['DATABASE'] = Path(os.environ.get('ESTOQUE_DB') or PASTA / 'instance' / 'estoque.sqlite3')
 
 
 def conectar():
@@ -34,12 +34,24 @@ def preparar_banco():
         conectar().executescript(esquema)
 
 
+def listar_materiais():
+    return conectar().execute(
+        '''
+        SELECT m.id, m.nome, m.unidade,
+               COALESCE(SUM(CASE WHEN v.tipo = 'entrada' THEN v.quantidade
+                                 ELSE -v.quantidade END), 0) AS saldo
+        FROM materiais AS m
+        LEFT JOIN movimentacoes AS v ON v.material_id = m.id
+        GROUP BY m.id, m.nome, m.unidade
+        ORDER BY m.nome COLLATE NOCASE, m.id
+        '''
+    ).fetchall()
+
+
 @app.get('/')
 def materiais():
     busca = request.args.get('busca', '').strip()
-    itens = conectar().execute(
-        'SELECT id, nome, unidade FROM materiais ORDER BY nome COLLATE NOCASE, id'
-    ).fetchall()
+    itens = listar_materiais()
     if busca:
         termo = busca.casefold()
         itens = [
@@ -53,7 +65,7 @@ def materiais():
 def adicionar_material():
     nome = request.form.get('nome', '').strip()
     unidade = request.form.get('unidade', '').strip()
-    if not nome or not unidade:
+    if not (1 <= len(nome) <= 120 and 1 <= len(unidade) <= 40):
         flash('Preencha o nome e a unidade do material.', 'erro')
         return redirect(url_for('materiais'))
 
@@ -71,7 +83,7 @@ def adicionar_material():
 def editar_material(material_id):
     nome = request.form.get('nome', '').strip()
     unidade = request.form.get('unidade', '').strip()
-    if not nome or not unidade:
+    if not (1 <= len(nome) <= 120 and 1 <= len(unidade) <= 40):
         flash('Preencha o nome e a unidade do material.', 'erro')
         return redirect(url_for('materiais'))
 
